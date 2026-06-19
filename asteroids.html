@@ -282,8 +282,8 @@ function addBtn(id, key) {
 addBtn('btn-left','left');addBtn('btn-right','right');
 addBtn('btn-thrust','thrust');addBtn('btn-fire','fire');addBtn('btn-shield','shield');
 
-c.addEventListener('touchstart',e=>{e.preventDefault();if(!running)init();},{passive:false});
 c.addEventListener('click',()=>{if(!running)init();});
+document.addEventListener('touchstart',e=>{if(!running){e.preventDefault();init();}},{passive:false});
 
 // Tela inicial
 makeStars();
