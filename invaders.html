@@ -41,25 +41,6 @@
       font-weight:bold; letter-spacing:1px;
     }
     #btn-fire.pressed { background:rgba(255,255,0,0.3); }
-    #info {
-      position:fixed; bottom:6px; left:0; right:0;
-      font-size:0.55rem; letter-spacing:1px;
-      color:#444; text-align:center; line-height:1.8;
-      pointer-events:none;
-    }
-    #info kbd {
-      display:inline-block; padding:1px 5px;
-      border:1px solid #333; border-radius:3px;
-      background:#111; color:#0f0; font-family:'Courier New',monospace;
-    }
-    @media (hover:hover) and (pointer:fine) {
-      #controls { display:none; }
-      #info .touch-hint { display:none; }
-    }
-    @media (hover:none) {
-      #info { bottom:80px; }
-      #info .kb-hint { display:none; }
-    }
   </style>
 </head>
 <body>
@@ -74,14 +55,6 @@
     <div class="btn" id="btn-left">◀</div>
     <div class="btn" id="btn-fire" id="btn-fire">FIRE</div>
     <div class="btn" id="btn-right">▶</div>
-  </div>
-  <div id="info">
-    <div class="kb-hint">
-      <kbd>← →</kbd> mover &nbsp; <kbd>ESPAÇO</kbd> atirar
-    </div>
-    <div class="touch-hint">
-      ◀▶ mover &nbsp; FIRE atirar
-    </div>
   </div>
 
 <script>
@@ -301,7 +274,6 @@ function addBtn(id,key){
 }
 addBtn('btn-left','left');addBtn('btn-right','right');addBtn('btn-fire','fire');
 c.addEventListener('click',()=>{if(state!=='play')initGame();});
-c.addEventListener('touchstart',e=>{e.preventDefault();if(state!=='play')initGame();},{passive:false});
 
 requestAnimationFrame(loop);
 </script>

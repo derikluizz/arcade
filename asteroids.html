@@ -41,25 +41,6 @@
     #btn-shield.pressed { background:rgba(255,170,0,0.3); }
     #btn-fire { color:#ff0; border-color:rgba(255,255,0,0.4); background:rgba(255,255,0,0.08); }
     #btn-fire.pressed { background:rgba(255,255,0,0.3); }
-    #info {
-      position:fixed; bottom:6px; left:0; right:0;
-      font-size:0.55rem; letter-spacing:1px;
-      color:#444; text-align:center; line-height:1.8;
-      pointer-events:none;
-    }
-    #info kbd {
-      display:inline-block; padding:1px 5px;
-      border:1px solid #333; border-radius:3px;
-      background:#111; color:#0ff; font-family:'Courier New',monospace;
-    }
-    @media (hover:hover) and (pointer:fine) {
-      #controls { display:none; }
-      #info .touch-hint { display:none; }
-    }
-    @media (hover:none) {
-      #info { bottom:80px; }
-      #info .kb-hint { display:none; }
-    }
   </style>
 </head>
 <body>
@@ -76,14 +57,6 @@
     <div class="btn" id="btn-right">▶</div>
     <div class="btn" id="btn-fire">🔥</div>
     <div class="btn" id="btn-shield">🛡</div>
-  </div>
-  <div id="info">
-    <div class="kb-hint">
-      <kbd>↑</kbd> acelerar &nbsp; <kbd>← →</kbd> girar &nbsp; <kbd>ESPAÇO</kbd> atirar &nbsp; <kbd>Z</kbd> escudo
-    </div>
-    <div class="touch-hint">
-      ▲ acelerar &nbsp; ◀▶ girar &nbsp; 🔥 atirar &nbsp; 🛡 escudo
-    </div>
   </div>
 
 <script>
