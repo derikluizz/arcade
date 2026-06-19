@@ -274,6 +274,7 @@ function addBtn(id,key){
 }
 addBtn('btn-left','left');addBtn('btn-right','right');addBtn('btn-fire','fire');
 c.addEventListener('click',()=>{if(state!=='play')initGame();});
+c.addEventListener('touchstart',e=>{e.preventDefault();if(state!=='play')initGame();},{passive:false});
 
 requestAnimationFrame(loop);
 </script>
