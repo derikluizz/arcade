@@ -88,7 +88,11 @@ function drawSprite(spr,x,y,sc,color){
 
 // ── Sons ──
 let actx;
-function au(){if(!actx)actx=new(AudioContext||webkitAudioContext)();return actx;}
+function au(){
+  if(!actx)actx=new(window.AudioContext||window.webkitAudioContext)();
+  if(actx.state==='suspended')actx.resume();
+  return actx;
+}
 function tone(f,d,t='square',v=0.08){try{const a=au(),o=a.createOscillator(),g=a.createGain();o.connect(g);g.connect(a.destination);o.type=t;o.frequency.value=f;g.gain.setValueAtTime(v,a.currentTime);g.gain.exponentialRampToValueAtTime(0.001,a.currentTime+d);o.start();o.stop(a.currentTime+d);}catch(e){}}
 
 // ── Estado ──
@@ -132,7 +136,7 @@ function hitBunker(bullet,bk){
 
 function setupWave(){
   const speedUp=1+(wave-1)*0.12;
-  invStepInterval=Math.max(8,38-wave*2);
+  invStepInterval=Math.max(12,52-wave*2);
   invaders=[];
   const cols=11,rows=5,sc=Math.floor(W/100),sw=11*sc,sh=8*sc,gapX=Math.floor(W/40),gapY=Math.floor(H/30);
   const startX=Math.floor(W*0.04),startY=Math.floor(H*0.11);
@@ -183,7 +187,7 @@ function update(){
     let drop=(invDir>0&&maxX>=W-8)||(invDir<0&&minX<=8);
     if(drop)invDir*=-1;
     const step=invDir*Math.ceil(W/56);
-    invaders.forEach(i=>{if(!i.alive)return;i.frame^=1;if(drop)i.y+=Math.floor(H/50);else i.x+=step;});
+    invaders.forEach(i=>{if(!i.alive)return;i.frame^=1;if(drop)i.y+=Math.floor(H/65);else i.x+=step;});
     alive.forEach(i=>{if(i.y+i.sh>=player.y)state='gameover';});
   }
 
@@ -192,7 +196,7 @@ function update(){
     invShootTimer=0;
     const cols2={};alive.forEach(i=>{const k=Math.round(i.x);if(!cols2[k]||cols2[k].y<i.y)cols2[k]=i;});
     const shooters=Object.values(cols2);const s=shooters[Math.floor(Math.random()*shooters.length)];
-    enemyBullets.push({x:s.x+s.sw/2-2,y:s.y+s.sh,w:4,h:12,vy:Math.ceil(H/100)+wave*0.3});tone(80,0.08,'sawtooth',0.1);
+    enemyBullets.push({x:s.x+s.sw/2-2,y:s.y+s.sh,w:4,h:12,vy:Math.ceil(H/140)+wave*0.2});tone(80,0.08,'sawtooth',0.1);
   }
 
   ufoTimer--;if(ufoTimer<=0&&!ufo){ufo={x:-60,y:Math.floor(H*0.06),w:48,h:24,dir:1,speed:2.5};if(Math.random()<0.5){ufo.x=W+60;ufo.dir=-1;}ufoTimer=500+Math.random()*700;}
