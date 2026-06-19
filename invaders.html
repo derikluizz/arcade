@@ -41,6 +41,22 @@
       font-weight:bold; letter-spacing:1px;
     }
     #btn-fire.pressed { background:rgba(255,255,0,0.3); }
+    #info {
+      margin-top:8px; font-size:0.58rem; letter-spacing:1px;
+      color:#444; text-align:center; line-height:1.9;
+    }
+    #info kbd {
+      display:inline-block; padding:1px 6px;
+      border:1px solid #333; border-radius:4px;
+      background:#111; color:#0f0; font-family:'Courier New',monospace;
+    }
+    @media (hover:hover) and (pointer:fine) {
+      #controls { display:none; }
+      #info .touch-hint { display:none; }
+    }
+    @media (hover:none) {
+      #info .kb-hint { display:none; }
+    }
   </style>
 </head>
 <body>
@@ -55,6 +71,14 @@
     <div class="btn" id="btn-left">◀</div>
     <div class="btn" id="btn-fire" id="btn-fire">FIRE</div>
     <div class="btn" id="btn-right">▶</div>
+  </div>
+  <div id="info">
+    <div class="kb-hint">
+      <kbd>← →</kbd> mover &nbsp; <kbd>ESPAÇO</kbd> atirar
+    </div>
+    <div class="touch-hint">
+      ◀▶ mover &nbsp; FIRE atirar
+    </div>
   </div>
 
 <script>
