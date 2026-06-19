@@ -255,8 +255,13 @@ function render(){
   }
 }
 
-let raf;
-function loop(){update();render();raf=requestAnimationFrame(loop);}
+let raf, lastT=0;
+function loop(ts){
+  raf=requestAnimationFrame(loop);
+  if(ts-lastT<14)return;
+  lastT=ts;
+  update();render();
+}
 
 // ── Input ──
 document.addEventListener('keydown',e=>{
