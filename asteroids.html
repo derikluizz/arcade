@@ -240,10 +240,17 @@ function render(){
     ctx.textAlign='center';
     ctx.fillStyle=lives<=0?'#f44':'#0ff';
     ctx.font=`bold ${W*0.08}px Courier New`;
-    ctx.fillText(lives<=0?'GAME OVER':'PAUSADO',W/2,H/2-20);
-    if(lives<=0){ctx.fillStyle='#0ff';ctx.font=`${W*0.05}px Courier New`;ctx.fillText('Pontos: '+score,W/2,H/2+20);}
-    ctx.fillStyle='#555';ctx.font=`${W*0.035}px Courier New`;
-    ctx.fillText('Toque para reiniciar',W/2,H/2+50);ctx.textAlign='left';
+    ctx.fillText(lives<=0?'GAME OVER':'ASTEROIDS',W/2,H*0.28);
+    if(lives<=0){ctx.fillStyle='#0ff';ctx.font=`${W*0.05}px Courier New`;ctx.fillText('Pontos: '+score,W/2,H*0.38);}
+    ctx.fillStyle='#555';ctx.font=`${W*0.038}px Courier New`;
+    ctx.fillText('Clique ou pressione qualquer tecla para começar',W/2,H*0.44);
+    ctx.fillStyle='#333';ctx.font=`${W*0.03}px Courier New`;
+    const lh=W*0.055;
+    ctx.fillText('↑  Acelerar',W/2,H*0.56);
+    ctx.fillText('← →  Girar',W/2,H*0.56+lh);
+    ctx.fillText('ESPAÇO  Atirar',W/2,H*0.56+lh*2);
+    ctx.fillText('Z  Escudo',W/2,H*0.56+lh*3);
+    ctx.textAlign='left';
   }
 }
 
@@ -282,10 +289,18 @@ c.addEventListener('click',()=>{if(!running)init();});
 makeStars();
 ctx.fillStyle='#000';ctx.fillRect(0,0,W,H);
 stars.forEach(s=>{ctx.beginPath();ctx.arc(s.x,s.y,s.r,0,TWO_PI);ctx.fillStyle=`rgba(255,255,255,${s.b})`;ctx.fill();});
-ctx.textAlign='center';ctx.fillStyle='#0ff';ctx.font=`bold ${W*0.09}px Courier New`;
-ctx.fillText('ASTEROIDS',W/2,H/2-10);
-ctx.fillStyle='#555';ctx.font=`${W*0.04}px Courier New`;
-ctx.fillText('Toque para começar',W/2,H/2+30);ctx.textAlign='left';
+ctx.textAlign='center';
+ctx.fillStyle='#0ff';ctx.font=`bold ${W*0.09}px Courier New`;
+ctx.fillText('ASTEROIDS',W/2,H*0.28);
+ctx.fillStyle='#555';ctx.font=`${W*0.038}px Courier New`;
+ctx.fillText('Clique ou pressione qualquer tecla para começar',W/2,H*0.44);
+ctx.fillStyle='#333';ctx.font=`${W*0.03}px Courier New`;
+const lh=W*0.055;
+ctx.fillText('↑  Acelerar',W/2,H*0.56);
+ctx.fillText('← →  Girar',W/2,H*0.56+lh);
+ctx.fillText('ESPAÇO  Atirar',W/2,H*0.56+lh*2);
+ctx.fillText('Z  Escudo',W/2,H*0.56+lh*3);
+ctx.textAlign='left';
 
 requestAnimationFrame(loop);
 </script>
