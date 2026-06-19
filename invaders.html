@@ -93,7 +93,7 @@ function tone(f,d,t='square',v=0.08){try{const a=au(),o=a.createOscillator(),g=a
 
 // ── Estado ──
 let state='title', score=0, best=0, lives=3, wave=1;
-let player, bullets, enemyBullets, invaders, ufo;
+let player, bullets=[], enemyBullets=[], invaders=[], ufo;
 let invDir=1, invStepTimer=0, invStepInterval, invShootTimer=0;
 let particles=[], floats=[];
 let keys={};
@@ -208,12 +208,18 @@ function render(){
   stars.forEach(s=>{ctx.beginPath();ctx.arc(s.x*W,s.y*H,s.r,0,Math.PI*2);ctx.fillStyle=`rgba(255,255,255,${s.b})`;ctx.fill();});
 
   if(state==='title'){
-    ctx.textAlign='center';ctx.fillStyle='#0f0';ctx.font=`bold ${Math.floor(W*0.08)}px Courier New`;
-    ctx.fillText('SPACE INVADERS',W/2,H*0.3);
-    drawSprite(SPR.crab,W/2-40,H*0.42,sc2,'#0f0');ctx.fillStyle='#0f0';ctx.font=`${Math.floor(W*0.03)}px Courier New`;ctx.fillText('= 30 PTS',W/2+20,H*0.42+8*sc2/2);
-    drawSprite(SPR.squid,W/2-40,H*0.52,sc2,'#0ff');ctx.fillStyle='#0ff';ctx.fillText('= 20 PTS',W/2+20,H*0.52+8*sc2/2);
-    drawSprite(SPR.bug,W/2-40,H*0.62,sc2,'#f80');ctx.fillStyle='#f80';ctx.fillText('= 10 PTS',W/2+20,H*0.62+8*sc2/2);
-    ctx.fillStyle='#0f0';ctx.font=`bold ${Math.floor(W*0.04)}px Courier New`;ctx.fillText('TOQUE PARA COMEÇAR',W/2,H*0.82);
+    ctx.textAlign='center';
+    ctx.fillStyle='#0f0';ctx.font=`bold ${Math.floor(W*0.08)}px Courier New`;
+    ctx.fillText('SPACE INVADERS',W/2,H*0.12);
+    drawSprite(SPR.crab,W/2-40,H*0.22,sc2,'#0f0');ctx.fillStyle='#0f0';ctx.font=`${Math.floor(W*0.03)}px Courier New`;ctx.fillText('= 30 PTS',W/2+20,H*0.22+8*sc2/2);
+    drawSprite(SPR.squid,W/2-40,H*0.32,sc2,'#0ff');ctx.fillStyle='#0ff';ctx.fillText('= 20 PTS',W/2+20,H*0.32+8*sc2/2);
+    drawSprite(SPR.bug,W/2-40,H*0.42,sc2,'#f80');ctx.fillStyle='#f80';ctx.fillText('= 10 PTS',W/2+20,H*0.42+8*sc2/2);
+    ctx.fillStyle='#555';ctx.font=`${Math.floor(W*0.032)}px Courier New`;
+    const lh=Math.floor(W*0.058);
+    ctx.fillText('← →  Mover',W/2,H*0.58);
+    ctx.fillText('ESPAÇO  Atirar',W/2,H*0.58+lh);
+    ctx.fillStyle='#0f0';ctx.font=`bold ${Math.floor(W*0.04)}px Courier New`;
+    ctx.fillText('Clique ou toque para começar',W/2,H*0.82);
     ctx.textAlign='left';return;
   }
 
@@ -226,10 +232,12 @@ function render(){
   invaders.forEach(inv=>{if(!inv.alive)return;drawSprite(SPR[inv.type],inv.x,inv.y,inv.sc,COLORS[inv.type]);});
   if(ufo)drawSprite(SPR.ufo,ufo.x,ufo.y,4,COLORS.ufo);
 
-  ctx.fillStyle='#0f0';
-  ctx.fillRect(player.x+player.w/2-2,player.y-8,4,10);
-  ctx.fillRect(player.x,player.y,player.w,player.h);
-  ctx.fillRect(player.x+8,player.y-4,player.w-16,6);
+  if(player){
+    ctx.fillStyle='#0f0';
+    ctx.fillRect(player.x+player.w/2-2,player.y-8,4,10);
+    ctx.fillRect(player.x,player.y,player.w,player.h);
+    ctx.fillRect(player.x+8,player.y-4,player.w-16,6);
+  }
 
   ctx.fillStyle='#0f0';ctx.fillRect(0,H-Math.floor(H*0.045),W,2);
 
@@ -274,6 +282,7 @@ function addBtn(id,key){
 }
 addBtn('btn-left','left');addBtn('btn-right','right');addBtn('btn-fire','fire');
 c.addEventListener('click',()=>{if(state!=='play')initGame();});
+document.addEventListener('touchstart',e=>{if(state!=='play'){e.preventDefault();initGame();}},{passive:false});
 
 requestAnimationFrame(loop);
 </script>
