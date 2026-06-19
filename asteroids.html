@@ -87,7 +87,7 @@ function makeShip(){return{x:W/2,y:H/2,vx:0,vy:0,angle:-Math.PI/2,r:14,shootCool
 function makeAsteroid(x,y,size){
   const sides=rndInt(7,12),verts=[];
   for(let i=0;i<sides;i++){const a=(i/sides)*TWO_PI;verts.push({x:Math.cos(a)*size*rnd(0.75,1.2),y:Math.sin(a)*size*rnd(0.75,1.2)});}
-  const spd=rnd(0.5,1.5)*(1+wave*0.08),ang=rnd(0,TWO_PI);
+  const spd=rnd(0.3,0.9)*(1+wave*0.12),ang=rnd(0,TWO_PI);
   return{x,y,vx:Math.cos(ang)*spd,vy:Math.sin(ang)*spd,rot:0,rotSpd:rnd(-0.03,0.03),size,verts,r:size*0.85};
 }
 const rndInt=(a,b)=>Math.floor(rnd(a,b+1));
@@ -111,7 +111,7 @@ function explode(x,y,color,count){
 }
 
 function spawnWave(){
-  const count=3+wave;
+  const count=2+wave;
   for(let i=0;i<count;i++){
     let x,y;
     do{x=rnd(0,W);y=rnd(0,H);}while(Math.hypot(x-ship.x,y-ship.y)<150);
