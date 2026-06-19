@@ -42,12 +42,14 @@
     }
     #btn-fire.pressed { background:rgba(255,255,0,0.3); }
     #info {
-      margin-top:8px; font-size:0.58rem; letter-spacing:1px;
-      color:#444; text-align:center; line-height:1.9;
+      position:fixed; bottom:6px; left:0; right:0;
+      font-size:0.55rem; letter-spacing:1px;
+      color:#444; text-align:center; line-height:1.8;
+      pointer-events:none;
     }
     #info kbd {
-      display:inline-block; padding:1px 6px;
-      border:1px solid #333; border-radius:4px;
+      display:inline-block; padding:1px 5px;
+      border:1px solid #333; border-radius:3px;
       background:#111; color:#0f0; font-family:'Courier New',monospace;
     }
     @media (hover:hover) and (pointer:fine) {
@@ -55,6 +57,7 @@
       #info .touch-hint { display:none; }
     }
     @media (hover:none) {
+      #info { bottom:80px; }
       #info .kb-hint { display:none; }
     }
   </style>
