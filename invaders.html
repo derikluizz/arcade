@@ -138,8 +138,13 @@ function setupWave(){
   const speedUp=1+(wave-1)*0.12;
   invStepInterval=Math.max(12,52-wave*2);
   invaders=[];
-  const cols=11,rows=5,sc=Math.floor(W/100),sw=11*sc,sh=8*sc,gapX=Math.floor(W/40),gapY=Math.floor(H/30);
-  const startX=Math.floor(W*0.04),startY=Math.floor(H*0.11);
+  const cols=11,rows=5;
+  const sc=Math.max(2,Math.floor(W/155));
+  const sw=11*sc,sh=8*sc;
+  const gapX=Math.max(4,Math.floor((W*0.90-11*sw)/10));
+  const gapY=Math.floor(H/30);
+  const totalW=11*sw+10*gapX;
+  const startX=Math.floor((W-totalW)/2),startY=Math.floor(H*0.11);
   for(let r=0;r<rows;r++)for(let col=0;col<cols;col++){
     let type,pts;
     if(r<1){type='crab';pts=30;}else if(r<3){type='squid';pts=20;}else{type='bug';pts=10;}
