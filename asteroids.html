@@ -92,7 +92,7 @@ function makeAsteroid(x,y,size){
 }
 const rndInt=(a,b)=>Math.floor(rnd(a,b+1));
 
-let ship,bullets,asteroids,particles,shieldOn;
+let ship,bullets=[],asteroids=[],particles=[],shieldOn=false;
 let score=0,best=0,lives=3,wave=1,running=false,invTimer=0;
 let keys={};
 
@@ -214,7 +214,7 @@ function render(){
   });
   bullets.forEach(b=>{ctx.beginPath();ctx.arc(b.x,b.y,2.5,0,TWO_PI);ctx.fillStyle='#ff0';ctx.fill();});
 
-  if(running||(lives>0)){
+  if(running && ship){
     if(invTimer<=0||Math.floor(invTimer/4)%2===0){
       ctx.save();ctx.translate(ship.x,ship.y);ctx.rotate(ship.angle);
       if(shieldOn){ctx.beginPath();ctx.arc(0,0,ship.r+8,0,TWO_PI);ctx.strokeStyle=`rgba(0,200,255,0.6)`;ctx.lineWidth=3;ctx.stroke();}
