@@ -1,0 +1,586 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<meta http-equiv="Content-Security-Policy" content="default-src 'none'; style-src 'unsafe-inline'; script-src 'unsafe-inline'; img-src 'self' data:; font-src 'none'; connect-src 'none'; frame-ancestors 'none';">
+<meta name="referrer" content="no-referrer">
+<title>Hard Work Solutions — Arcade</title>
+<style>
+  /* Fontes de sistema — sem dependência externa */
+
+  :root {
+    --cyan:   #00f5ff;
+    --purple: #bf00ff;
+    --pink:   #ff006e;
+    --yellow: #ffd600;
+    --green:  #00ff88;
+    --dark:   #07070f;
+    --card:   #0d0d20;
+  }
+
+  * { margin:0; padding:0; box-sizing:border-box; }
+
+  body {
+    background: var(--dark);
+    min-height: 100vh;
+    font-family: 'Courier New', Courier, monospace;
+    color: #fff;
+    overflow-x: hidden;
+  }
+
+  /* ── Fundo animado ── */
+  body::before {
+    content:'';
+    position:fixed; inset:0;
+    background:
+      radial-gradient(ellipse at 20% 20%, rgba(0,245,255,0.06) 0%, transparent 60%),
+      radial-gradient(ellipse at 80% 80%, rgba(191,0,255,0.06) 0%, transparent 60%);
+    pointer-events:none; z-index:0;
+  }
+
+  #grid-bg {
+    position:fixed; inset:0; z-index:0; pointer-events:none;
+    background-image:
+      linear-gradient(rgba(0,245,255,0.04) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0,245,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+    animation: gridMove 20s linear infinite;
+  }
+  @keyframes gridMove { to { background-position: 0 40px; } }
+
+  /* ── Partículas canvas ── */
+  #particles { position:fixed; inset:0; z-index:0; pointer-events:none; }
+
+  /* ── Conteúdo ── */
+  .content { position:relative; z-index:1; }
+
+  /* ── Header ── */
+  header {
+    text-align: center;
+    padding: 60px 20px 40px;
+  }
+
+  .logo-sub {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.75rem;
+    letter-spacing: 6px;
+    color: var(--cyan);
+    opacity: 0.7;
+    margin-bottom: 14px;
+    text-transform: uppercase;
+  }
+
+  .logo {
+    font-family: 'Courier New', Courier, monospace;
+    font-weight: 900;
+    font-size: clamp(2rem, 5vw, 3.8rem);
+    line-height: 1.1;
+    background: linear-gradient(135deg, var(--cyan) 0%, var(--purple) 50%, var(--pink) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    text-shadow: none;
+    filter: drop-shadow(0 0 30px rgba(0,245,255,0.4));
+    animation: logoPulse 4s ease-in-out infinite;
+  }
+  @keyframes logoPulse {
+    0%,100% { filter: drop-shadow(0 0 20px rgba(0,245,255,0.3)); }
+    50%      { filter: drop-shadow(0 0 50px rgba(191,0,255,0.5)); }
+  }
+
+  .tagline {
+    margin-top: 14px;
+    font-size: 0.75rem;
+    letter-spacing: 3px;
+    color: #444;
+    text-transform: uppercase;
+  }
+
+  .divider {
+    width: 300px;
+    height: 1px;
+    margin: 30px auto;
+    background: linear-gradient(90deg, transparent, var(--cyan), transparent);
+    opacity: 0.4;
+  }
+
+  /* ── Título da seção ── */
+  .section-title {
+    text-align: center;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.7rem;
+    letter-spacing: 8px;
+    color: var(--cyan);
+    opacity: 0.6;
+    margin-bottom: 40px;
+    text-transform: uppercase;
+  }
+
+  /* ── Grid de jogos ── */
+  .games {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 24px;
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 30px 80px;
+  }
+
+  /* ── Card ── */
+  .card {
+    position: relative;
+    background: var(--card);
+    border: 1px solid rgba(255,255,255,0.07);
+    border-radius: 16px;
+    overflow: hidden;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+    display: block;
+    transition: transform 0.25s, box-shadow 0.25s, border-color 0.25s;
+    animation: fadeUp 0.5s ease both;
+  }
+  .card:nth-child(1){ animation-delay:0.1s; }
+  .card:nth-child(2){ animation-delay:0.2s; }
+  .card:nth-child(3){ animation-delay:0.3s; }
+  .card:nth-child(4){ animation-delay:0.4s; }
+
+  @keyframes fadeUp {
+    from { opacity:0; transform:translateY(30px); }
+    to   { opacity:1; transform:translateY(0); }
+  }
+
+  .card:hover {
+    transform: translateY(-8px) scale(1.02);
+    border-color: var(--accent);
+    box-shadow: 0 20px 60px rgba(0,0,0,0.6), 0 0 30px var(--glow);
+  }
+
+  /* Linha de brilho no topo do card */
+  .card::before {
+    content:'';
+    position:absolute; top:0; left:0; right:0; height:2px;
+    background: var(--accent);
+    opacity:0.8;
+    box-shadow: 0 0 12px var(--accent);
+  }
+
+  /* Preview canvas dentro do card */
+  .card-preview {
+    width: 100%;
+    height: 180px;
+    display: block;
+    background: #04040c;
+  }
+
+  .card-body { padding: 20px; }
+
+  .card-badge {
+    display: inline-block;
+    font-size: 0.5rem;
+    letter-spacing: 3px;
+    padding: 3px 10px;
+    border-radius: 20px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    margin-bottom: 10px;
+    text-transform: uppercase;
+  }
+
+  .card-title {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: #fff;
+    margin-bottom: 8px;
+  }
+
+  .card-desc {
+    font-size: 0.7rem;
+    color: #555;
+    line-height: 1.8;
+    margin-bottom: 18px;
+  }
+
+  .card-footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  .card-keys {
+    font-size: 0.58rem;
+    color: #333;
+    line-height: 1.8;
+  }
+  .card-keys b { color: #555; }
+
+  .play-btn {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: var(--accent);
+    color: #000;
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 0.6rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    padding: 9px 18px;
+    border-radius: 8px;
+    text-transform: uppercase;
+    transition: opacity 0.2s, transform 0.15s;
+    box-shadow: 0 0 16px var(--glow);
+  }
+  .card:hover .play-btn { opacity:0.9; transform:scale(1.05); }
+  .play-btn svg { width:14px; height:14px; fill:#000; }
+
+  /* ── Footer ── */
+  footer {
+    text-align:center;
+    padding: 30px;
+    border-top: 1px solid rgba(255,255,255,0.04);
+    font-size: 0.6rem;
+    color: #2a2a3a;
+    letter-spacing: 2px;
+  }
+  footer span { color: #3a3a5a; }
+</style>
+</head>
+<body>
+<canvas id="particles"></canvas>
+<div id="grid-bg"></div>
+
+<div class="content">
+  <header>
+    <div class="logo-sub">Hard Work Solutions</div>
+    <div class="logo">ARCADE</div>
+    <div class="tagline">Classic Games Collection</div>
+    <div class="divider"></div>
+    <div class="section-title">▸ Escolha seu jogo</div>
+  </header>
+
+  <div class="games">
+
+    <!-- Snake -->
+    <a class="card" href="snake.html" style="--accent:var(--green);--glow:rgba(0,255,136,0.3);">
+      <canvas class="card-preview" id="prev-snake" width="400" height="180"></canvas>
+      <div class="card-body">
+        <div class="card-badge">Clássico</div>
+        <div class="card-title">Snake</div>
+        <div class="card-desc">Guie a cobra, coma a comida e não bata nas paredes. Quanto mais cresce, mais difícil fica.</div>
+        <div class="card-footer">
+          <div class="card-keys"><b>← → ↑ ↓</b> mover</div>
+          <div class="play-btn">
+            <svg viewBox="0 0 16 16"><polygon points="4,2 14,8 4,14"/></svg>
+            JOGAR
+          </div>
+        </div>
+      </div>
+    </a>
+
+    <!-- Asteroids -->
+    <a class="card" href="asteroids.html" style="--accent:var(--cyan);--glow:rgba(0,245,255,0.3);">
+      <canvas class="card-preview" id="prev-ast" width="400" height="180"></canvas>
+      <div class="card-body">
+        <div class="card-badge">Ação</div>
+        <div class="card-title">Asteroids</div>
+        <div class="card-desc">Destrua os asteroides no espaço infinito. Use o escudo quando estiver em apuros.</div>
+        <div class="card-footer">
+          <div class="card-keys"><b>↑</b> acelerar &nbsp;<b>← →</b> girar<br><b>ESPAÇO</b> atirar &nbsp;<b>Z</b> escudo</div>
+          <div class="play-btn">
+            <svg viewBox="0 0 16 16"><polygon points="4,2 14,8 4,14"/></svg>
+            JOGAR
+          </div>
+        </div>
+      </div>
+    </a>
+
+    <!-- Space Invaders -->
+    <a class="card" href="invaders.html" style="--accent:var(--pink);--glow:rgba(255,0,110,0.3);">
+      <canvas class="card-preview" id="prev-inv" width="400" height="180"></canvas>
+      <div class="card-body">
+        <div class="card-badge">Shooter</div>
+        <div class="card-title">Space Invaders</div>
+        <div class="card-desc">Defenda a Terra da invasão alienígena. Não deixe os inimigos chegarem ao chão.</div>
+        <div class="card-footer">
+          <div class="card-keys"><b>← →</b> mover &nbsp;<b>ESPAÇO</b> atirar</div>
+          <div class="play-btn">
+            <svg viewBox="0 0 16 16"><polygon points="4,2 14,8 4,14"/></svg>
+            JOGAR
+          </div>
+        </div>
+      </div>
+    </a>
+
+    <!-- Tetris -->
+    <a class="card" href="tetris.html" style="--accent:var(--yellow);--glow:rgba(255,214,0,0.3);">
+      <canvas class="card-preview" id="prev-tet" width="400" height="180"></canvas>
+      <div class="card-body">
+        <div class="card-badge">Puzzle</div>
+        <div class="card-title">Tetris</div>
+        <div class="card-desc">Encaixe os blocos, complete linhas e sobreviva o maior tempo possível.</div>
+        <div class="card-footer">
+          <div class="card-keys"><b>← →</b> mover &nbsp;<b>↑</b> girar<br><b>↓</b> acelerar &nbsp;<b>ESPAÇO</b> drop</div>
+          <div class="play-btn">
+            <svg viewBox="0 0 16 16"><polygon points="4,2 14,8 4,14"/></svg>
+            JOGAR
+          </div>
+        </div>
+      </div>
+    </a>
+
+  </div>
+</div>
+
+<footer>
+  &copy; 2025 <span>HARD WORK SOLUTIONS</span> — All rights reserved
+</footer>
+
+<script>
+// ── Partículas flutuantes ────────────────────────────────────────
+const pc = document.getElementById('particles');
+const px = pc.getContext('2d');
+pc.width = innerWidth; pc.height = innerHeight;
+window.addEventListener('resize', ()=>{ pc.width=innerWidth; pc.height=innerHeight; });
+
+const dots = Array.from({length:60},()=>({
+  x: Math.random()*innerWidth,
+  y: Math.random()*innerHeight,
+  r: Math.random()*1.5+0.3,
+  vx: (Math.random()-0.5)*0.3,
+  vy: (Math.random()-0.5)*0.3,
+  a: Math.random()*0.4+0.1,
+  color: ['#00f5ff','#bf00ff','#ff006e','#00ff88'][Math.random()*4|0],
+}));
+
+function animDots() {
+  px.clearRect(0,0,pc.width,pc.height);
+  dots.forEach(d=>{
+    d.x+=d.vx; d.y+=d.vy;
+    if(d.x<0) d.x=pc.width; if(d.x>pc.width) d.x=0;
+    if(d.y<0) d.y=pc.height; if(d.y>pc.height) d.y=0;
+    px.beginPath(); px.arc(d.x,d.y,d.r,0,Math.PI*2);
+    px.fillStyle=d.color; px.globalAlpha=d.a; px.fill();
+  });
+  px.globalAlpha=1;
+  requestAnimationFrame(animDots);
+}
+animDots();
+
+// ── Preview: Snake ───────────────────────────────────────────────
+(function(){
+  const cv = document.getElementById('prev-snake');
+  const cx = cv.getContext('2d');
+  const W=cv.width, H=cv.height, SZ=14;
+  let snake=[{x:10,y:6},{x:9,y:6},{x:8,y:6},{x:7,y:6}];
+  let food={x:16,y:4};
+  let dir={x:1,y:0}, t=0;
+
+  function draw(){
+    cx.fillStyle='#04040c'; cx.fillRect(0,0,W,H);
+    cx.beginPath(); cx.arc(food.x*SZ+SZ/2,food.y*SZ+SZ/2,SZ/2-1,0,Math.PI*2);
+    cx.fillStyle='#ff006e'; cx.fill();
+    snake.forEach((s,i)=>{
+      const a=1-(i/snake.length)*0.55;
+      cx.fillStyle=`rgba(0,255,136,${a})`;
+      cx.beginPath(); cx.roundRect(s.x*SZ+1,s.y*SZ+1,SZ-2,SZ-2,3); cx.fill();
+    });
+  }
+
+  function step(){
+    t++;
+    if(t%8===0){
+      const head={x:snake[0].x+dir.x, y:snake[0].y+dir.y};
+      if(head.x<0||head.x>=W/SZ||head.y<0||head.y>=H/SZ){ dir.x*=-1; dir.y*=-1; return; }
+      snake.unshift(head); snake.pop();
+      // Gira automaticamente
+      if(t%40===0){
+        const dirs=[{x:1,y:0},{x:0,y:1},{x:-1,y:0},{x:0,y:-1}];
+        const d=dirs[t/40%4|0]; dir=d;
+      }
+    }
+    draw();
+    requestAnimationFrame(step);
+  }
+  step();
+})();
+
+// ── Preview: Asteroids ───────────────────────────────────────────
+(function(){
+  const cv = document.getElementById('prev-ast');
+  const cx = cv.getContext('2d');
+  const W=cv.width, H=cv.height;
+  const rnd=(a,b)=>Math.random()*(b-a)+a;
+
+  const ship={x:W/2,y:H/2,angle:0,vx:0,vy:0};
+  const asts=Array.from({length:5},()=>({
+    x:rnd(0,W),y:rnd(0,H),
+    vx:rnd(-0.5,0.5),vy:rnd(-0.5,0.5),
+    rot:0,rotSpd:rnd(-0.02,0.02),r:rnd(20,35),
+    verts:Array.from({length:9},(_,i)=>{
+      const a=(i/9)*Math.PI*2;
+      const r=rnd(18,35);
+      return {x:Math.cos(a)*r,y:Math.sin(a)*r};
+    })
+  }));
+
+  const stars=Array.from({length:40},()=>({x:rnd(0,W),y:rnd(0,H),r:rnd(0.5,1.5),a:rnd(0.2,0.8)}));
+
+  let bullet={x:0,y:0,vx:0,vy:0,life:0};
+  let shootT=0;
+
+  function step(){
+    ship.angle+=0.015;
+    ship.vx+=Math.cos(ship.angle)*0.08;
+    ship.vy+=Math.sin(ship.angle)*0.08;
+    ship.vx*=0.97; ship.vy*=0.97;
+    ship.x=(ship.x+ship.vx+W)%W; ship.y=(ship.y+ship.vy+H)%H;
+
+    asts.forEach(a=>{a.x=(a.x+a.vx+W)%W;a.y=(a.y+a.vy+H)%H;a.rot+=a.rotSpd;});
+
+    shootT++;
+    if(shootT>80){
+      shootT=0;
+      bullet={x:ship.x+Math.cos(ship.angle)*20,y:ship.y+Math.sin(ship.angle)*20,
+              vx:Math.cos(ship.angle)*7,vy:Math.sin(ship.angle)*7,life:40};
+    }
+    if(bullet.life>0){bullet.x+=bullet.vx;bullet.y+=bullet.vy;bullet.life--;}
+
+    cx.fillStyle='#04040c'; cx.fillRect(0,0,W,H);
+    stars.forEach(s=>{cx.beginPath();cx.arc(s.x,s.y,s.r,0,Math.PI*2);cx.fillStyle=`rgba(255,255,255,${s.a})`;cx.fill();});
+
+    asts.forEach(a=>{
+      cx.save();cx.translate(a.x,a.y);cx.rotate(a.rot);
+      cx.beginPath();a.verts.forEach((v,i)=>i?cx.lineTo(v.x,v.y):cx.moveTo(v.x,v.y));
+      cx.closePath();cx.strokeStyle='#88aaaa';cx.lineWidth=1.5;cx.stroke();cx.restore();
+    });
+
+    cx.save();cx.translate(ship.x,ship.y);cx.rotate(ship.angle);
+    cx.beginPath();cx.moveTo(16,0);cx.lineTo(-10,8);cx.lineTo(-5,0);cx.lineTo(-10,-8);cx.closePath();
+    cx.strokeStyle='#00f5ff';cx.lineWidth=2;cx.stroke();cx.restore();
+
+    if(bullet.life>0){
+      cx.beginPath();cx.arc(bullet.x,bullet.y,2.5,0,Math.PI*2);
+      cx.fillStyle='#ff0';cx.fill();
+    }
+    requestAnimationFrame(step);
+  }
+  step();
+})();
+
+// ── Preview: Space Invaders ──────────────────────────────────────
+(function(){
+  const cv = document.getElementById('prev-inv');
+  const cx = cv.getContext('2d');
+  const W=cv.width, H=cv.height;
+
+  const INV=[
+    [0,0,1,0,0,0,0,0,1,0,0],
+    [0,0,0,1,0,0,0,1,0,0,0],
+    [0,0,1,1,1,1,1,1,1,0,0],
+    [0,1,1,0,1,1,1,0,1,1,0],
+    [1,1,1,1,1,1,1,1,1,1,1],
+    [1,0,1,1,1,1,1,1,1,0,1],
+    [1,0,1,0,0,0,0,0,1,0,1],
+    [0,0,0,1,1,0,1,1,0,0,0],
+  ];
+
+  const colors=['#00ff88','#00f5ff','#ff006e','#ffd600','#bf00ff'];
+  const rows=3, cols=7, sc=2;
+  const sw=11*sc, sh=8*sc;
+  const gap=8;
+  let offX=20, dir=1, t=0, frame=0;
+
+  const invs=[];
+  for(let r=0;r<rows;r++) for(let c=0;c<cols;c++)
+    invs.push({r,c,alive:true,color:colors[r%colors.length]});
+
+  function drawInv(x,y,color,fr){
+    cx.fillStyle=color;
+    INV.forEach((row,ri)=>row.forEach((v,ci)=>{
+      if(!v) return;
+      const fx = fr ? 10-ci : ci;
+      cx.fillRect(x+fx*sc,y+ri*sc,sc,sc);
+    }));
+  }
+
+  function step(){
+    t++;
+    if(t%18===0){
+      frame^=1;
+      offX+=dir*6;
+      if(offX>W-(cols*(sw+gap))-10||offX<10) dir*=-1;
+    }
+
+    cx.fillStyle='#04040c'; cx.fillRect(0,0,W,H);
+
+    invs.forEach(inv=>{
+      if(!inv.alive) return;
+      const x=offX+inv.c*(sw+gap);
+      const y=18+inv.r*(sh+gap);
+      drawInv(x,y,inv.color,frame);
+    });
+
+    // Player
+    const px2=W/2-18;
+    cx.fillStyle='#00ff88';
+    cx.fillRect(px2+16,H-28,4,10);
+    cx.fillRect(px2,H-22,36,14);
+    cx.fillRect(px2+8,H-26,20,6);
+
+    // Linha do chão
+    cx.fillStyle='#00ff88'; cx.fillRect(0,H-10,W,2);
+
+    requestAnimationFrame(step);
+  }
+  step();
+})();
+
+// ── Preview: Tetris ──────────────────────────────────────────────
+(function(){
+  const cv = document.getElementById('prev-tet');
+  const cx = cv.getContext('2d');
+  const W=cv.width, H=cv.height;
+  const SZ=16, COLS=Math.floor(W/SZ), ROWS=Math.floor(H/SZ);
+
+  const colors=['#0ef','#ff0','#c0f','#0f0','#f33','#00f','#f80'];
+  const board=Array.from({length:ROWS},()=>Array(COLS).fill(0));
+
+  // Preenche parte do fundo
+  for(let r=ROWS-1;r>=ROWS-4;r--)
+    for(let c=0;c<COLS;c++)
+      if(Math.random()>0.25) board[r][c]=colors[Math.random()*colors.length|0];
+
+  // Peça caindo
+  let py=0, t=0;
+  const piece=[[1,1,1],[0,1,0]]; // T
+  const pc2='#c0f';
+  const px2=Math.floor(COLS/2)-1;
+
+  function block(x,y,color,a=1){
+    cx.globalAlpha=a;
+    cx.fillStyle=color;
+    cx.fillRect(x*SZ+1,y*SZ+1,SZ-2,SZ-2);
+    cx.fillStyle='rgba(255,255,255,0.25)';
+    cx.fillRect(x*SZ+2,y*SZ+2,SZ-4,5);
+    cx.globalAlpha=1;
+  }
+
+  function step(){
+    t++;
+    if(t%20===0){ py++; if(py+piece.length>ROWS-4) py=0; }
+
+    cx.fillStyle='#04040c'; cx.fillRect(0,0,W,H);
+    cx.strokeStyle='rgba(255,255,255,0.03)'; cx.lineWidth=1;
+    for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) cx.strokeRect(c*SZ,r*SZ,SZ,SZ);
+    for(let r=0;r<ROWS;r++) for(let c=0;c<COLS;c++) if(board[r][c]) block(c,r,board[r][c]);
+    piece.forEach((row,r)=>row.forEach((v,c)=>{ if(v) block(px2+c,py+r,pc2); }));
+
+    requestAnimationFrame(step);
+  }
+  step();
+})();
+</script>
+</body>
+</html>
